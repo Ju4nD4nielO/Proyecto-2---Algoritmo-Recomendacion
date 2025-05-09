@@ -1,0 +1,96 @@
+// -------------------------------------------
+// 1. Crear nodos: Usuarios
+// -------------------------------------------
+// Cada usuario tiene id, nombre, edad, carrera/profesión, género, e intereses
+CREATE (:Usuario {id:'camila', nombre:'Camila López', edad:20, carrera:'Psicología', genero:'Mujer', intereses:['Leer libros', 'Estudiar', 'Uso de la tecnología', 'Meditar']});
+CREATE (:Usuario {id:'juan', nombre:'Juan David Pérez', edad:22, carrera:'Ingeniería Civil', genero:'Hombre', intereses:['Construir maquetas', 'Jugar videojuegos', 'Ver deportes', 'Caminar']});
+CREATE (:Usuario {id:'valeria', nombre:'Valeria Ramírez', edad:23, carrera:'Medicina', genero:'Mujer', intereses:['Hacer voluntariado', 'Cocinar', 'Hacer yoga', 'Pintar']});
+CREATE (:Usuario {id:'sebastian', nombre:'Sebastián Díaz', edad:23, profesion:'Emprendedor', genero:'Hombre', intereses:['Emprender', 'Viajar', 'Networking', 'Fotografía']});
+
+// -------------------------------------------
+// 2. Crear nodos: Géneros
+// -------------------------------------------
+// Géneros de películas
+CREATE (:Genero {nombre:'Drama psicológico'});
+CREATE (:Genero {nombre:'Acción'});
+CREATE (:Genero {nombre:'Ciencia ficción'});
+CREATE (:Genero {nombre:'Drama emotivo'});
+CREATE (:Genero {nombre:'Crimen'});
+CREATE (:Genero {nombre:'Aventura'});
+CREATE (:Genero {nombre:'Comedia'});
+
+// -------------------------------------------
+// 3. Crear nodos: Estados emocionales
+// -------------------------------------------
+// Emociones para recomendaciones
+CREATE (:EstadoEmocional {nombre:'Reflexiva'});
+CREATE (:EstadoEmocional {nombre:'Energética'});
+CREATE (:EstadoEmocional {nombre:'Melancólica'});
+CREATE (:EstadoEmocional {nombre:'Tensa'});
+CREATE (:EstadoEmocional {nombre:'Alegre'});
+
+// -------------------------------------------
+// 4. Crear nodos: Películas
+// -------------------------------------------
+// Películas con géneros asociados
+CREATE (:Pelicula {titulo:'El Cisne Negro', genero:'Drama psicológico'});
+CREATE (:Pelicula {titulo:'Avengers: Endgame', genero:'Acción'});
+CREATE (:Pelicula {titulo:'Inside Out', genero:'Drama emotivo'});
+CREATE (:Pelicula {titulo:'Zodiac', genero:'Crimen'});
+CREATE (:Pelicula {titulo:'Interstellar', genero:'Ciencia ficción'});
+CREATE (:Pelicula {titulo:'Inception', genero:'Ciencia ficción'});
+CREATE (:Pelicula {titulo:'The Grand Budapest Hotel', genero:'Comedia'});
+CREATE (:Pelicula {titulo:'Mad Max: Fury Road', genero:'Acción'});
+CREATE (:Pelicula {titulo:'The Lord of the Rings: The Fellowship of the Ring', genero:'Aventura'});
+
+// -------------------------------------------
+// 5. Separar operaciones de escritura y lectura
+// -------------------------------------------
+// WITH * permite pasar todos los nodos creados al siguiente bloque
+
+
+// -------------------------------------------
+// 6. Crear relaciones: Usuarios a Géneros (LE_GUSTA)
+// -------------------------------------------
+// Relacionar usuarios con géneros que les gustan
+MATCH (u:Usuario {id:'camila'}), (g:Genero {nombre:'Ciencia ficción'})
+MERGE (u)-[:LE_GUSTA]->(g);
+MATCH (u:Usuario {id:'camila'}), (g:Genero {nombre:'Drama psicológico'})
+MERGE (u)-[:LE_GUSTA]->(g);
+
+MATCH (u:Usuario {id:'juan'}), (g1:Genero {nombre:'Acción'}), (g2:Genero {nombre:'Ciencia ficción'})
+MERGE (u)-[:LE_GUSTA]->(g1);
+MERGE (u)-[:LE_GUSTA]->(g2);
+
+MATCH (u:Usuario {id:'valeria'}), (g:Genero {nombre:'Drama emotivo'})
+MERGE (u)-[:LE_GUSTA]->(g);
+MATCH (u:Usuario {id:'valeria'}), (g:Genero {nombre:'Comedia'})
+MERGE (u)-[:LE_GUSTA]->(g);
+
+MATCH (u:Usuario {id:'sebastian'}), (g:Genero {nombre:'Crimen'})
+MERGE (u)-[:LE_GUSTA]->(g);
+MATCH (u:Usuario {id:'sebastian'}), (g:Genero {nombre:'Aventura'})
+MERGE (u)-[:LE_GUSTA]->(g);
+
+// -------------------------------------------
+// 7. Crear relaciones: Estados emocionales a Películas (RECOMIENDA)
+// -------------------------------------------
+// Relacionar emociones con películas recomendadas
+MATCH (e:EstadoEmocional {nombre:'Reflexiva'}), (p:Pelicula {titulo:'El Cisne Negro'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Energética'}), (p:Pelicula {titulo:'Avengers: Endgame'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Melancólica'}), (p:Pelicula {titulo:'Inside Out'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Tensa'}), (p:Pelicula {titulo:'Zodiac'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Reflexiva'}), (p:Pelicula {titulo:'Interstellar'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Reflexiva'}), (p:Pelicula {titulo:'Inception'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Alegre'}), (p:Pelicula {titulo:'The Grand Budapest Hotel'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Energética'}), (p:Pelicula {titulo:'Mad Max: Fury Road'})
+MERGE (e)-[:RECOMIENDA]->(p);
+MATCH (e:EstadoEmocional {nombre:'Alegre'}), (p:Pelicula {titulo:'The Lord of the Rings: The Fellowship of the Ring'})
+MERGE (e)-[:RECOMIENDA]->(p);
